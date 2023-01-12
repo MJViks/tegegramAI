@@ -1,0 +1,53 @@
+exports.CONFIG = {
+    AI: {
+        API_KEY: "***************************",
+        OPTIONS: {
+            model: "text-davinci-003",
+            prompt: '',
+            max_tokens: 2000, //Длинна ответа от 1 до 4096
+            top_p: 1, //Сколько процентов от общей массы рассматривать
+            temperature: 0.9, //На сколько модель близко к сухой правде
+            frequency_penalty: 1, //Запрещать ли повторы. От 2 до -2
+            //stop: [" Human:", " AI:"], //Стоп слова
+        }
+
+    },
+    TELEGRAM: {
+        API_KEY: "***************************",
+        COMMANDS: [
+            {
+                command: "help",
+                description: "Показать справку",
+            },
+            {
+                command: "ai",
+                description: "Запрос к AI",
+            },
+            {
+                command: "model",
+                description: "Название модели. ```text-davinci-003``` или ```code-davinci-002``` Подробнее тут https://beta.openai.com/docs/models/gpt-3",
+            },
+            {
+                command: "max_tokens",
+                description:
+                    "Длинна ответа от 1 до 4000",
+            },
+            {
+                command: "temperature",
+                description: "На сколько модель близко к сухой правде. От 1 до 0",
+            },
+            {
+                command: "frequency_penalty",
+                description: "Запрещать ли повторы. От 2 до -2",
+            },
+            {
+                command: "top_p",
+                description: "Сколько процентов от общей массы ответов рассматривать. От 1 до 0",
+            },
+            {
+                command: "options",
+                description: "Посмотреть текущие настройки",
+            }
+        ]
+    }
+}
