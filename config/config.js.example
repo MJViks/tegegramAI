@@ -12,6 +12,9 @@ exports.CONFIG = {
         }
 
     },
+    TRANSLATE:{
+        KEY: "****************************"
+    }
     TELEGRAM: {
         API_KEY: "***************************",
         COMMANDS: [

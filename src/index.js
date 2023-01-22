@@ -1,7 +1,8 @@
-const CFG = require("../config/config")
+const CONFIG = require("../config/config").CONFIG
+const translate = require("./translate").translate
 const TelegramBot = require('node-telegram-bot-api');
 const { Configuration, OpenAIApi } = require("openai");
-const CONFIG = CFG.CONFIG
+
 //Инициализация API
 const bot = new TelegramBot(CONFIG.TELEGRAM.API_KEY, { polling: true });
 bot.setMyCommands(CONFIG.TELEGRAM.COMMANDS);
@@ -25,18 +26,36 @@ const help = (chatId, bot) => {
 //Формирование ответа AI
 const getAI = async (msg) =>{
   const chatId = msg.chat.id;
-  const myMsg = msg.text.replace(/\/ai /, '').replace("\\",'\\\\')
+  let myMsg = msg.text.replace(/\/ai /, '').replace("\\",'\\\\')
+
+  myMsg = translate(myMsg, "en").then(res => res)
+
   CONFIG.AI.OPTIONS.prompt = myMsg
   // Отправляем запрос на предсказание с помощью GPT-3
   await openai.createCompletion(CONFIG.AI.OPTIONS).then((response) => {
     // Обрабатываем ответ
-    const prediction = 'Ваш вопрос:\n' + myMsg + '\n\n' + 'Ответ:' + response.data.choices[0].text.replace("\\",'\\\\').replace("/",'//');;
+    let prediction = 'Ваш вопрос:\n' + myMsg + '\n\n' + 'Ответ:' + response.data.choices[0].text.replace("\\",'\\\\').replace("/",'//');;
 
+    prediction = translate(prediction, "ru").then(res => res)
     // Отправляем предсказание пользователю
     bot.sendMessage(chatId, prediction, {parse_mode: "Markdown"});
   }).catch((error) => {
     // Обрабатываем ошибку
     bot.sendMessage(chatId, 'Ошибка');
+    console.log(JSON.stringify(error));
+  });
+}
+
+//Переводчик на английский
+const translateEn = async (msg) =>{
+  const chatId = msg.chat.id;
+  let myMsg = msg.text.replace(/\/tEn /, '').replace("\\",'\\\\')
+
+  await translate(myMsg, 'en').then((response) => {
+    bot.sendMessage(chatId, response, {parse_mode: "Markdown"});
+  }).catch((error) => {
+    // Обрабатываем ошибку
+    bot.sendMessage(chatId, 'Ошибка переводчика');
     console.log(JSON.stringify(error));
   });
 }
@@ -108,4 +127,9 @@ bot.onText(/\/options/, (msg, match) => {
   {
     parse_mode: "Markdown",
   });
+})
+
+//tEn
+bot.onText(/\/tEn/, (msg, match) => {
+  translateEn(msg)
 })
