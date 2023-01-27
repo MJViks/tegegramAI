@@ -40,7 +40,7 @@ bot.onText(/\/ai (.+)/, async (msg, match) => {
     // Отправляем предсказание пользователю
     bot.sendMessage(chatId, answer.toString(), { parse_mode: "Markdown" });
   } catch (ex) {
-    bot.sendMessage(chatId, 'Ошибка');
+    bot.sendMessage(chatId, 'Ошибка\n' + ex);
     console.log(ex);
   }
 })
