@@ -45,6 +45,24 @@ bot.onText(/\/ai (.+)/, async (msg, match) => {
   }
 })
 
+//aien
+bot.onText(/\/aien (.+)/, async (msg, match) => {
+  //Формирование ответа AI
+  const chatId = msg.chat.id;
+  try {
+    const myMsgRu = msg.text.replace(/\/ai /, '')
+    const myMsgEn = await translate(myMsgRu, "en")
+    const resAIEn = await getAI(myMsgEn)
+
+    const answer = 'Ваш вопрос:\n' + myMsgRu + '\n\n' + 'Ответ:' + resAIEn
+    // Отправляем предсказание пользователю
+    bot.sendMessage(chatId, answer.toString(), { parse_mode: "Markdown" });
+  } catch (ex) {
+    bot.sendMessage(chatId, 'Ошибка\n' + ex);
+    console.log(ex);
+  }
+})
+
 //help
 bot.onText(/\/help/, (msg, match) => {
   const chatId = msg.chat.id
